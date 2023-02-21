@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,8 +12,10 @@ public class GameManager : MonoBehaviour
     public float spawnRate = 1f;
     public List<Vector3> targetPositionsInScene;
     public Vector3 randomPos;
-    
+
     public TextMeshProUGUI scoreText;
+    public GameObject gameOverPanel;
+    
     
     private int score;
     
@@ -27,6 +30,19 @@ public class GameManager : MonoBehaviour
         
         score = 0;
         scoreText.text = $"Score: \n{score}";
+        
+        gameOverPanel.SetActive(false);
+    }
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        gameOverPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
     private Vector3 RandomSpawnPosition()
