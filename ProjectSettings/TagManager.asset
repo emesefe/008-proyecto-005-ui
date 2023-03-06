@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bad
   - Good
+  - Shield
   layers:
   - Default
   - TransparentFX

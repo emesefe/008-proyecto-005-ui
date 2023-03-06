@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    public int points;
+    public int points; // Puntuación del objeto (positiva para Good, 0 para Bad)
     public GameObject explosionParticle;
     
     private float lifeTime = 2f;
@@ -15,7 +15,7 @@ public class Target : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        Destroy(gameObject, lifeTime);
+        Destroy(gameObject, lifeTime); // Autodestrucción
     }
 
     private void OnMouseDown()
@@ -24,12 +24,24 @@ public class Target : MonoBehaviour
         {
             if (gameObject.CompareTag("Bad"))
             {
-                gameManager.GameOver();
+                if (gameManager.hasPowerupShield)
+                {
+                    gameManager.hasPowerupShield = false;
+                }
+                else
+                {
+                    gameManager.MinusLife();
+                }
             }
             
             else if (gameObject.CompareTag("Good"))
             {
                 gameManager.UpdateScore(points);
+            }
+            
+            else if (gameObject.CompareTag("Shield"))
+            {
+                gameManager.hasPowerupShield = true;
             }
 
             Instantiate(explosionParticle, transform.position,
@@ -41,6 +53,6 @@ public class Target : MonoBehaviour
     private void OnDestroy()
     {
         gameManager.targetPositionsInScene.
-            Remove(transform.position);
+            Remove(transform.position); // Dejamos libre la posición
     }
 }

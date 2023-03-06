@@ -1,36 +1,39 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject[] targetPrefabs;
     
     public bool isGameOver;
-    public float spawnRate = 1f;
     public List<Vector3> targetPositionsInScene;
-    public Vector3 randomPos;
 
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI livesText;
     public GameObject gameOverPanel;
+    public GameObject startGamePanel;
+
+    public bool hasPowerupShield;
     
+    private float spawnRate = 1f; // Tiempo que tardan en aparecer los objetos
+    private Vector3 randomPos;
     
-    private int score;
+    private int score; // La puntuación total
     
     private float minX = -3.75f;
     private float minY = -3.75f;
     private float distanceBetweenSquares = 2.5f;
-    
+
+    private int lives = 3;
+
     private void Start()
     {
-        isGameOver = false;
-        StartCoroutine("SpawnRandomTarget");
-        
-        score = 0;
-        scoreText.text = $"Score: \n{score}";
-        
+        startGamePanel.SetActive(true);
         gameOverPanel.SetActive(false);
     }
 
@@ -78,5 +81,34 @@ public class GameManager : MonoBehaviour
     {
         score += newPoints;
         scoreText.text = $"Score: \n{score}";
+    }
+    
+    public void StartGame(int difficulty)
+    {
+        isGameOver = false;
+        
+        score = 0;
+        UpdateScore(0);
+
+        lives = 3;
+        livesText.text = $"Lives: {lives}";
+        
+        spawnRate /= difficulty;
+        
+        StartCoroutine(SpawnRandomTarget());
+        
+        startGamePanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+    }
+
+    public void MinusLife()
+    {
+        lives--;
+        livesText.text = $"Lives: {lives}";
+
+        if (lives <= 0)
+        {
+            GameOver();
+        }
     }
 }
